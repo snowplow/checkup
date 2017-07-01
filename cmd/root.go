@@ -13,6 +13,7 @@ import (
 
 var configFile string
 var storeResults bool
+var notify bool
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -28,7 +29,9 @@ You can specify a different file location using the
 
 Running checkup without any arguments will invoke
 a single checkup and print results to stdout. To
-store the results of the check, use --store.`,
+store the results of the check, use --store.
+
+To send notification, use --notify.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		allHealthy := true
@@ -77,6 +80,9 @@ func loadCheckup() checkup.Checkup {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if !notify {
+		c.Notifier = nil
+	}
 
 	return c
 }
@@ -93,4 +99,5 @@ func Execute() {
 func init() {
 	RootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "checkup.json", "JSON config file")
 	RootCmd.Flags().BoolVar(&storeResults, "store", false, "Store results")
+	RootCmd.Flags().BoolVar(&notify, "notify", false, "Send notificaion")
 }
