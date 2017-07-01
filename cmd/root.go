@@ -13,6 +13,7 @@ import (
 
 var configFile string
 var storeResults bool
+var silent bool
 var notify bool
 
 // RootCmd represents the base command when called without any subcommands
@@ -31,7 +32,9 @@ Running checkup without any arguments will invoke
 a single checkup and print results to stdout. To
 store the results of the check, use --store.
 
-To send notification, use --notify.`,
+To send notification, use --notify. It also can be
+used in conjunction with --silent to prevent
+printing out the results to console`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		allHealthy := true
@@ -57,7 +60,11 @@ To send notification, use --notify.`,
 		}
 
 		for _, result := range results {
-			fmt.Println(result)
+			if !silent {
+				fmt.Println(result)
+			} else if !notify {
+				log.Fatal("--silent is to be used along with --notify")
+			}
 			if !result.Healthy {
 				allHealthy = false
 			}
@@ -99,5 +106,6 @@ func Execute() {
 func init() {
 	RootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "checkup.json", "JSON config file")
 	RootCmd.Flags().BoolVar(&storeResults, "store", false, "Store results")
+	RootCmd.Flags().BoolVar(&silent, "silent", false, "Do not print results")
 	RootCmd.Flags().BoolVar(&notify, "notify", false, "Send notificaion")
 }
