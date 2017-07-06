@@ -94,8 +94,11 @@ func (p PagerDuty) Send(result Result) error {
 		}
 		details, _ = json.Marshal(d)
 	}
-	var jDetails map[string]interface{}
+	var jDetails map[string]string
 	json.Unmarshal(details, &jDetails)
+	for k, v := range result.Tags {
+		jDetails[k] = v
+	}
 	event := pagerduty.Event{
 		ServiceKey:  p.Service,
 		Type:        "trigger",
