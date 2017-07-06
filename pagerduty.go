@@ -16,8 +16,8 @@ type PagerDuty struct {
 	Service string `json:"service_key"`
 }
 
-// Details for PagerDuty event
-type Details struct {
+// NetDetails for PagerDuty Net event
+type NetDetails struct {
 	Endpoint  string
 	Timestamp string
 	Threshold string
@@ -28,6 +28,19 @@ type Details struct {
 	All       string
 	Assesment string
 	Notice    string
+}
+
+// TLSDetails for PagerDuty TLS event
+type TLSDetails struct {
+	CommonName string
+	Serial     string
+	NotBefore  string
+	NotAfter   string
+	DNSNames   string
+	Issuer     string
+	ExpiresIn  string
+	Assesment  string
+	Notice     string
 }
 
 //Notify implements notifier interface
@@ -42,28 +55,52 @@ func (p PagerDuty) Notify(results []Result) error {
 
 //Send request via Pagerduty API to create incident
 func (p PagerDuty) Send(result Result) error {
-	status := fmt.Sprint(result.Status())
-	stats := result.ComputeStats()
-	d := Details{
-		Endpoint:  result.Endpoint,
-		Timestamp: fmt.Sprint(time.Unix(0, result.Timestamp).UTC()),
-		Threshold: fmt.Sprint(result.ThresholdRTT),
-		Max:       fmt.Sprint(stats.Max),
-		Min:       fmt.Sprint(stats.Min),
-		Median:    fmt.Sprint(stats.Median),
-		Mean:      fmt.Sprint(stats.Mean),
-		All:       fmt.Sprintf("%v", result.Times),
-		Assesment: fmt.Sprintf("%v", strings.ToUpper(status)),
-		Notice:    result.Notice,
+	var status string
+	var details []byte
+	if result.Type == "tls" {
+		switch result.Status() {
+		case "down":
+			status = "EXPIRED"
+		case "degraded":
+			status = "EXPIRING"
+		}
+		property := result.Context.(CertProperties)
+		d := TLSDetails{
+			CommonName: property.CommonName,
+			Serial:     fmt.Sprint(property.Serial),
+			NotBefore:  fmt.Sprint(property.NotBefore),
+			NotAfter:   fmt.Sprint(property.NotAfter),
+			DNSNames:   fmt.Sprint(property.DNSNames),
+			Issuer:     property.Issuer,
+			ExpiresIn:  fmt.Sprintf("%d day(s)", -1*int(time.Since(property.NotAfter).Hours()/24)),
+			Assesment:  fmt.Sprintf("%s", status),
+			Notice:     result.Notice,
+		}
+		details, _ = json.Marshal(d)
+	} else {
+		status = strings.ToUpper(fmt.Sprint(result.Status()))
+		stats := result.ComputeStats()
+		d := NetDetails{
+			Endpoint:  result.Endpoint,
+			Timestamp: fmt.Sprint(time.Unix(0, result.Timestamp).UTC()),
+			Threshold: fmt.Sprint(result.ThresholdRTT),
+			Max:       fmt.Sprint(stats.Max),
+			Min:       fmt.Sprint(stats.Min),
+			Median:    fmt.Sprint(stats.Median),
+			Mean:      fmt.Sprint(stats.Mean),
+			All:       fmt.Sprintf("%v", result.Times),
+			Assesment: fmt.Sprintf("%s", status),
+			Notice:    result.Notice,
+		}
+		details, _ = json.Marshal(d)
 	}
-	details, _ := json.Marshal(d)
 	var jDetails map[string]interface{}
 	json.Unmarshal(details, &jDetails)
 	event := pagerduty.Event{
 		ServiceKey:  p.Service,
 		Type:        "trigger",
 		IncidentKey: result.Endpoint,
-		Description: result.Title + " (" + result.Endpoint + ") is " + d.Assesment,
+		Description: result.Title + " (" + result.Endpoint + ") is " + status,
 		Client:      result.Title,
 		ClientURL:   result.Endpoint,
 		Details:     jDetails,
