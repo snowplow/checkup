@@ -58,6 +58,9 @@ type HTTPChecker struct {
 	// Headers contains headers to added to the request
 	// that is sent for the check
 	Headers http.Header `json:"headers,omitempty"`
+
+	// Tags are custom tags providing context to the check
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // Check performs checks using c according to its configuration.
@@ -86,6 +89,9 @@ func (c HTTPChecker) Check() (Result, error) {
 	}
 
 	result.Times = c.doChecks(req)
+	if c.Tags != nil {
+		result.Tags = c.Tags
+	}
 
 	return c.conclude(result), nil
 }
