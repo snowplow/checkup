@@ -44,6 +44,9 @@ type TCPChecker struct {
 	// Attempts is how many requests the client will
 	// make to the endpoint in a single check.
 	Attempts int `json:"attempts,omitempty"`
+
+	// Tags are custom tags providing context to the check
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // Check performs checks using c according to its configuration.
@@ -55,6 +58,9 @@ func (c TCPChecker) Check() (Result, error) {
 
 	result := Result{Title: c.Name, Endpoint: c.URL, Timestamp: Timestamp()}
 	result.Times = c.doChecks()
+	if c.Tags != nil {
+		result.Tags = c.Tags
+	}
 
 	return c.conclude(result), nil
 }

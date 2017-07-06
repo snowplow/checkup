@@ -441,6 +441,10 @@ type Result struct {
 	// Message is an optional message to show on the status page.
 	// For example, what you're doing to fix a problem.
 	Message string `json:"message,omitempty"`
+
+	// Tags of the check
+	// (propagated from configuration file)
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // ComputeStats computes basic statistics about r.
@@ -493,9 +497,12 @@ func (r Result) String() string {
 		s += fmt.Sprintf("      Median: %s\n", stats.Median)
 		s += fmt.Sprintf("        Mean: %s\n", stats.Mean)
 		s += fmt.Sprintf("         All: %v\n", r.Times)
-		if r.Notice != "" {
-			s += fmt.Sprintf("      Notice: %s\n", r.Notice)
-		}
+	}
+	if r.Tags != nil {
+		s += fmt.Sprintf("        Tags: %s\n", r.Tags)
+	}
+	if r.Notice != "" {
+		s += fmt.Sprintf("      Notice: %s\n", r.Notice)
 	}
 	statusLine := fmt.Sprintf("  Assessment: %v\n", r.Status())
 	switch r.Status() {

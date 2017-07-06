@@ -30,6 +30,9 @@ type TLSChecker struct {
 	// Attempts is how many requests the client will
 	// make to the endpoint in a single check.
 	Attempts int `json:"attempts,omitempty"`
+
+	// Tags are custom tags providing context to the check
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // CertProperties is SSL certificate properties
@@ -73,6 +76,9 @@ func (c TLSChecker) Check() (Result, error) {
 		}
 	}
 	result.Context = *p
+	if c.Tags != nil {
+		result.Tags = c.Tags
+	}
 
 	return result, nil
 }
