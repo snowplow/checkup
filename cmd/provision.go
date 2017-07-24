@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sourcegraph/checkup"
+	"github.com/snowplow/checkup"
 	"github.com/spf13/cobra"
 )
 
