@@ -99,7 +99,7 @@ func TestDNSChecker(t *testing.T) {
 	}
 }
 
-func TestDNSCheckerWithAgressiveTimeout(t *testing.T) {
+func TestDNSCheckerWithAggressiveTimeout(t *testing.T) {
 	// Listen on localhost, random port
 	srv, err := net.Listen("tcp", "localhost:0")
 	if err != nil {

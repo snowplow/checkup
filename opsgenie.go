@@ -57,7 +57,7 @@ func (o OpsGenie) Send(result Result) error {
 		details["Median"] = fmt.Sprint(stats.Median)
 		details["Mean"] = fmt.Sprint(stats.Mean)
 		details["All"] = fmt.Sprintf("%v", result.Times)
-		details["Assesment"] = fmt.Sprint(status)
+		details["Assessment"] = fmt.Sprint(status)
 	}
 	if result.Notice != "" {
 		details["Notice"] = result.Notice
