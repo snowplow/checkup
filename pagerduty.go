@@ -18,16 +18,16 @@ type PagerDuty struct {
 
 // NetDetails for PagerDuty Net event
 type NetDetails struct {
-	Endpoint  string
-	Timestamp string
-	Threshold string
-	Max       string
-	Min       string
-	Median    string
-	Mean      string
-	All       string
-	Assesment string
-	Notice    string
+	Endpoint   string
+	Timestamp  string
+	Threshold  string
+	Max        string
+	Min        string
+	Median     string
+	Mean       string
+	All        string
+	Assessment string
+	Notice     string
 }
 
 // TLSDetails for PagerDuty TLS event
@@ -39,7 +39,7 @@ type TLSDetails struct {
 	DNSNames   string
 	Issuer     string
 	ExpiresIn  string
-	Assesment  string
+	Assessment string
 	Notice     string
 }
 
@@ -73,7 +73,7 @@ func (p PagerDuty) Send(result Result) error {
 			DNSNames:   fmt.Sprint(property.DNSNames),
 			Issuer:     property.Issuer,
 			ExpiresIn:  fmt.Sprintf("%d day(s)", -1*int(time.Since(property.NotAfter).Hours()/24)),
-			Assesment:  fmt.Sprintf("%s", status),
+			Assessment: fmt.Sprintf("%s", status),
 			Notice:     result.Notice,
 		}
 		details, _ = json.Marshal(d)
@@ -81,16 +81,16 @@ func (p PagerDuty) Send(result Result) error {
 		status = strings.ToUpper(fmt.Sprint(result.Status()))
 		stats := result.ComputeStats()
 		d := NetDetails{
-			Endpoint:  result.Endpoint,
-			Timestamp: fmt.Sprint(time.Unix(0, result.Timestamp).UTC()),
-			Threshold: fmt.Sprint(result.ThresholdRTT),
-			Max:       fmt.Sprint(stats.Max),
-			Min:       fmt.Sprint(stats.Min),
-			Median:    fmt.Sprint(stats.Median),
-			Mean:      fmt.Sprint(stats.Mean),
-			All:       fmt.Sprintf("%v", result.Times),
-			Assesment: fmt.Sprintf("%s", status),
-			Notice:    result.Notice,
+			Endpoint:   result.Endpoint,
+			Timestamp:  fmt.Sprint(time.Unix(0, result.Timestamp).UTC()),
+			Threshold:  fmt.Sprint(result.ThresholdRTT),
+			Max:        fmt.Sprint(stats.Max),
+			Min:        fmt.Sprint(stats.Min),
+			Median:     fmt.Sprint(stats.Median),
+			Mean:       fmt.Sprint(stats.Mean),
+			All:        fmt.Sprintf("%v", result.Times),
+			Assessment: fmt.Sprintf("%s", status),
+			Notice:     result.Notice,
 		}
 		details, _ = json.Marshal(d)
 	}

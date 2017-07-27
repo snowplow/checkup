@@ -237,7 +237,7 @@ func (c Checkup) MarshalJSON() ([]byte, error) {
 	return result, nil
 }
 
-// UnmarshalJSON unmarshales b into c. To succeed, it
+// UnmarshalJSON unmarshals b into c. To succeed, it
 // requires type information for the interface values.
 func (c *Checkup) UnmarshalJSON(b []byte) error {
 	// Unmarshal as much of b as we can; this requires
