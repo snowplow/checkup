@@ -99,7 +99,7 @@ func TestTCPChecker(t *testing.T) {
 	}
 }
 
-func TestTCPCheckerWithAgressiveTimeout(t *testing.T) {
+func TestTCPCheckerWithAggressiveTimeout(t *testing.T) {
 	// Listen on localhost, random port
 	srv, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
