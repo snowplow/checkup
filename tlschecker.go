@@ -101,7 +101,7 @@ func (c TLSChecker) doChecks(certURL string) (*CertProperties, Attempts) {
 }
 
 // conclude takes NotAfter in certificate property
-// and checks it aganst the checker's Threshold.
+// and checks it against the checker's Threshold.
 // If the certificate is expired its status is down,
 // if less then the threshold - degraded
 func (c TLSChecker) conclude(p *CertProperties, result Result) Result {
