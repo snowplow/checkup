@@ -1,1 +1,23 @@
 language: go
+go:
+  - 1.8
+
+script:
+  - make test
+  - make all
+
+before_deploy:
+  - pip install --user release-manager==0.1.0
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: make release
+  on:
+    condition: '"${TRAVIS_GO_VERSION}" == "1.8"'
+    tags: true
+
+env:
+  global:
+  - secure: UAWWdp6BH0gnZi73ciZ/yUOmFYn07lmjLHtJbf2GdrFU93kyozhg7LVZXJHswyIJSAKYy/RIcqdw5xluePiV06jeRrvvKd94iOCXSLsr6ZnjWQm/2J1aPpov54dBul2h56WC5gIR+QiSfEHkqqJ44Srz45C31Tx83OyX82Cg2fv+O24p3pKPD5oZQ8yOqe3Sua9XsaO+nf6gW/vsEG/YGOeOVJ2BNnXzpFrW0eRJysdjFa7m7J/tQePx6tL01N2d63w+hVT0hXvgJIfo+yFkbiSAm+/dgsBNIleCQpbeQz5kMDJrbBwCJbnzNr2cpEaudRr6eUVY57J1QwEzwd2cvtn89pCz/eupQgwrgcz6yWjWSwG/wBgOpUdqZY20RFbASA+AyvaUpQ9lGqv7sD+ZMfjzTL3OoXXcF7uuEhteAQ/F4E3w1MlSi67IhBVztuEx6qVKiuIPOhXofyMe1L49iA3CURlVN52dxG0OC46hvPAuoTyYnt5gYRrd2D07zJJZ6EpdWS4ur1RfM1tR8XqmDxpd8K4UyKH9Z/+s4eKkNVXCML5tL9OnP0LkpE/x+3jSGOm7VrZhSrJh8ZC+1hG71QspyPRNxvlhjglzMklRjPjh6NuLEXBjjK3HqUeTHB7EkNraUJ7Q2YIKtOmRVu7/TsUSd5816nJ6bBNDRRb8wsw=
+  - secure: HHS0sOWbFtrxlwMnRg0d4gOyJmu18uHumUOAUmmvr8KTruKGvt0e/yFSyo/57iUdzVGOaZKne67l7/8Ea9fpodyLg3LRdwSzoCWZgM5WI2+VsptZeTv4abvRj8wC5nmFh67fk+MsvZfkBLYobvkrKElRqiWKZsX+UD/NY7yLdcoigGyXGjff1dBKVjhT+oeUaYPCthKNIY+w8o2M4tu1dPfJw9W0L9b1pALsnaHno3GbnbEUpWkpfdt9htPvEa/cfLn5e2FedM00y2ExenDwpJcDWMGm60tTJaon8NayiSPtRgDEo/SBwh6lSB9c1w0deJbZ2jijhCqPGMlqKzuUMPcB22R2uJmm42oaIpAmDN1oeKaPFtTe79VTJ9VoYFKmDtUx/NOfQO4rJwvGdCoWxWQjp4rw1kU1to7QqCHC7c6HCuv79JUgBfG0+kDtrqbAHJde5o7onUK13b7vebqr4jSxP66Ta4tBs6Gi/FFsb1uBgpVm+nAf/WfT5b7XrnDRFUM9YnaDEyxFwCZ2HrQGTdNpb8oB9YOdtraeXLi02tJkGSg2x4DOHLH7zRKLDKhwtK888LJZZ8V/TG07NPAajfA/raF+6GLw7m0m47SlGAfjraE3j2FbEYwa8ED3CQg6z+1Jzw/c7QGoC4UusnZRyotuGJmmBRlK6OUwJ5CWsDI=
