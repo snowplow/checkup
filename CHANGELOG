@@ -1,0 +1,18 @@
+Version 0.1.0 (2017-08-31)
+---------------------------
+Initial release
+Add support for PagerDuty notification (#1)
+Add support for OpsGenie notification (#8)
+Add support for SSL certificates check (#4)
+Add custom tags to checkers (#7)
+Add `--notify` flag (#2)
+Add `--silent` flag (#5)
+New command `once` (#6)
+Improve visual output of check results (#3)
+Switch import path to snowplow repo (#9)
+Fix DNS test (#15)
+Remove TLS verification from TCP test (#16)
+Add VERSION file (#12)
+Add standard Vagrant environment (#11)
+Add CI/CD (#13)
+Update .gitignore and spelling (#14)
