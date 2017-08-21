@@ -14,22 +14,16 @@ coverage_html = $(coverage_dir)/coverage.html
 
 output_dir    = $(build_dir)/output
 linux_dir     = $(output_dir)/linux
-darwin_dir    = $(output_dir)/darwin
-windows_dir   = $(output_dir)/windows
 
 bin_name      = checkup
 bin_linux     = $(linux_dir)/$(bin_name)
-bin_darwin    = $(darwin_dir)/$(bin_name)
-bin_windows   = $(windows_dir)/$(bin_name)
 
 # -----------------------------------------------------------------------------
 #  BUILDING
 # -----------------------------------------------------------------------------
 
 all:
-	gox -osarch=linux/amd64 -output=$(bin_linux) ./cmd/checkup
-	gox -osarch=darwin/amd64 -output=$(bin_darwin) ./cmd/checkup
-	gox -osarch=windows/amd64 -output=$(bin_windows) ./cmd/checkup
+	cd cmd/checkup; go get -v -d; go build -v -ldflags '-s' -o ../../$(bin_linux)
 
 # -----------------------------------------------------------------------------
 #  FORMATTING
@@ -86,10 +80,6 @@ $(depend_log):
 
 	# Formatting dependencies
 	go get -u github.com/golang/lint/golint
-
-	# Build dependencies
-	go get -u github.com/mitchellh/gox/...
-	go get -u github.com/inconshreveable/mousetrap
 
 	@echo Dependencies fetched at: `/bin/date "+%Y-%m-%d---%H-%M-%S"` >> $(depend_log);
 
