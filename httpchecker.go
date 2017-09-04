@@ -114,12 +114,12 @@ func (c HTTPChecker) doChecks(req *http.Request) Attempts {
 			continue
 		}
 		err = c.checkDown(resp)
+		resp.Body.Close()
 		if err != nil {
 			checks[i].Error = err.Error()
-		}
-		resp.Body.Close()
-		if c.AttemptSpacing > 0 {
-			time.Sleep(c.AttemptSpacing)
+			if c.AttemptSpacing > 0 {
+				time.Sleep(c.AttemptSpacing)
+			}
 		}
 	}
 	return checks
