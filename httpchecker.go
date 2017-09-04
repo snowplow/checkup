@@ -133,11 +133,15 @@ func (c HTTPChecker) conclude(result Result) Result {
 	result.ThresholdRTT = c.ThresholdRTT
 
 	// Check errors (down)
+	failCount := 0
 	for i := range result.Times {
 		if result.Times[i].Error != "" {
-			result.Down = true
-			return result
+			failCount += 1
 		}
+	}
+	if failCount >= (len(result.Times) - failCount) {
+		result.Down = true
+		return result
 	}
 
 	// Check round trip time (degraded)
