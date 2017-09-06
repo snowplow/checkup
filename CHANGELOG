@@ -1,3 +1,8 @@
+Version 0.1.1 (2017-09-06)
+--------------------------
+Add backoff between HTTP checks (#20)
+Update conclude to fail only if there are more errors than successes (#21)
+
 Version 0.1.0 (2017-08-31)
 ---------------------------
 Initial release
